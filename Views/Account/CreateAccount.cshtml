@@ -1,0 +1,28 @@
+﻿@model AccountDetails
+
+@{
+    ViewData["Title"] = "Create Account";
+}
+
+<h2>Create Account</h2>
+
+<form asp-action="CreateAccount" method="post">
+    <div class="form-group">
+        <label asp-for="@Model.AccountName" class="control-label"></label>
+        <input asp-for="@Model.AccountName" class="form-control" />
+        <span asp-validation-for="@Model.AccountName" class="text-danger"></span>
+    </div>
+   
+    <div class="form-group">
+        <label asp-for="@Model.AccountBalance" class="control-label"></label>
+        <input asp-for="@Model.AccountBalance" type="number" class="form-control" />
+        <span asp-validation-for="@Model.AccountBalance" class="text-danger"></span>
+    </div>
+    <div class="form-group mt-2">
+        <input type="submit" value="Create Account" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

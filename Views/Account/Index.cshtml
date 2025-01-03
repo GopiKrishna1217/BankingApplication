@@ -1,0 +1,39 @@
+﻿@model List<AccountDetails>
+
+<h3>All Accounts</h3>
+<a href="/accounts/create-account">Create New Account</a>
+
+
+<h3>Create New Account</h3>
+
+<!-- Your form for creating a new account goes here -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>Account Name</th>
+            <th>Balance</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+            @if(Model != null && Model.Count > 0)
+            {
+                @foreach (var account in Model)
+                {
+                    <tr>
+                        <td>@account.AccountName</td>
+                        <td>@account.AccountBalance</td>
+                        <td>
+                            <a href="accounts/edit-account/@account.Id">Edit</a>
+                            <a href="accounts/edit-account/@account.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr><td colspan="3">No accounts available.</td></tr>
+            }
+           
+    </tbody>
+</table>
