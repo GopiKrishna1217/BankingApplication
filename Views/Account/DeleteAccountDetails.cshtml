@@ -1,0 +1,14 @@
+﻿@model AccountDetails
+@{
+    ViewData["Title"] = "Delete Account";
+}
+<h2>Edit Account</h2>
+
+<h3>Are you sure you want to delete this account?</h3>
+
+<p>Account Name : @Model.AccountName</p>
+<p>Account Balance : @Model.AccountBalance</p>
+<div class="row">
+    <div class="col-2"> <a class="btn-danger" href="/delete-account/@Model.Id">Delete</a>|</div>
+    <div class="col-2"> <a href="/accounts/index">Back to List</a></div>
+</div>
