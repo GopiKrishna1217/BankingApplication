@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using BankingApplication.Data;
 
 namespace BankingApplication.Controllers
 {
@@ -9,24 +10,29 @@ namespace BankingApplication.Controllers
     public class AccountController : Controller
     {
         private readonly IConfiguration _configuration;
-        private readonly string _connectionString;
+        private readonly AccountsBO _accountsBO;
 
         public AccountController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _connectionString = _configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            _accountsBO = new AccountsBO(_configuration);
         }
 
         [HttpGet("all")]
         public IActionResult Index()
         {
-            List<AccountDetails> details;
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                details = connection.Query<AccountDetails>("SELECT * FROM AccountDetails").ToList();
-            }
+            var details = _accountsBO.GetAccounts();
             return View(details);
+        }
+        [HttpGet("details/{id}")]
+        public IActionResult Details(int id)
+        {
+            var detail = _accountsBO.GetAccount(id);
+            if (detail == null)
+            {
+                return NotFound();
+            }
+            return View(detail);
         }
 
         [HttpGet("create-account")]
@@ -38,25 +44,14 @@ namespace BankingApplication.Controllers
         [HttpPost("CreateAccount")]
         public IActionResult CreateAccount(AccountDetails details)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var sql = "INSERT INTO AccountDetails (AccountName, AccountBalance) VALUES (@AccountName, @AccountBalance)";
-                connection.Execute(sql, details);
-            }
+           _accountsBO.CreateAccount(details);
             return RedirectToAction("Index");
         }
 
         [HttpGet("edit-account/{id}")]
         public IActionResult EditAccount(int id)
         {
-            AccountDetails? detail;
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var sql = "SELECT * FROM AccountDetails WHERE Id = @Id";
-                detail = connection.QuerySingleOrDefault<AccountDetails>(sql, new { Id = id });
-            }
+           var detail = _accountsBO.GetAccount(id);
             if (detail == null)
             {
                 return NotFound();
@@ -67,42 +62,26 @@ namespace BankingApplication.Controllers
         [HttpPost("EditAccountDetails")]
         public IActionResult EditAccountDetails(AccountDetails details)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var sql = "UPDATE AccountDetails SET AccountName = @AccountName, AccountBalance = @AccountBalance WHERE Id = @Id";
-                connection.Execute(sql, details);
-            }
+          _accountsBO.UpdateAccount(details);
             return RedirectToAction("Index");
         }
+
         [HttpGet("delete-account-details/{id}")]
         public IActionResult DeleteAccountDetails(int id)
         {
-            AccountDetails? detail;
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var sql = "SELECT * FROM AccountDetails WHERE Id = @Id";
-                detail = connection.QuerySingleOrDefault<AccountDetails>(sql, new { Id = id });
-            }
+           var detail=_accountsBO.GetAccount(id);
             if (detail == null)
             {
                 return NotFound();
             }
             return View(detail);
-
         }
 
-        [HttpDelete("delete-account/{id}")]
+        [HttpDelete("deleteaccount/{id}")]
         public IActionResult DeleteAccount(int id)
         {
-            using (var connection = new SqlConnection(_connectionString))
-            {
-                connection.Open();
-                var sql = "DELETE FROM AccountDetails WHERE Id = @Id";
-                connection.Execute(sql, new { Id = id });
-            }
-            return View();
+           _accountsBO.DeleteAccount(id);
+            return Ok();
         }
     }
 }

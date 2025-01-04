@@ -2,13 +2,35 @@
 @{
     ViewData["Title"] = "Delete Account";
 }
-<h2>Edit Account</h2>
+<h2>Delete Account</h2>
 
 <h3>Are you sure you want to delete this account?</h3>
 
 <p>Account Name : @Model.AccountName</p>
 <p>Account Balance : @Model.AccountBalance</p>
 <div class="row">
-    <div class="col-2"> <a class="btn-danger" href="/delete-account/@Model.Id">Delete</a>|</div>
-    <div class="col-2"> <a href="/accounts/index">Back to List</a></div>
+    <div class="col-1"> <a class="btn btn-danger" href="javascript:void(0);" onclick="deleteAccount(@Model.Id)">Delete</a></div>
+
+    @section Scripts {
+        <script type="text/javascript">
+            function deleteAccount(id) {
+               
+                    fetch(`/accounts/deleteaccount/${id}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/accounts/all';
+                        } else {
+                            alert('Failed to delete the account.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Failed to delete the account.');
+                    });
+                }
+        </script>
+    }
+    <div class="col-2"> <a href="/accounts/all">| Back to List</a></div>
 </div>

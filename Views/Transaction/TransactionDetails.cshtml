@@ -1,0 +1,16 @@
+﻿@model TransactionDetails
+
+@{
+    ViewData["Title"] = "Transaction Details";
+}
+
+<h2>Transaction Details</h2>
+<p>From Account : @Model.FromAccount</p>
+<p>To Account : @Model.ToAccount</p>
+<p>Transaction Date : @Model.TransactionTime</p>
+<p>Amount Debited : @Model.AmountDebited</p>
+<p>From Account Balance : @Model.FromAccountBalance</p>
+<p>To Account Balance : @Model.ToAccountBalance</p>
+
+<a href="/transaction/AllRecords">| Back to List</a>
+

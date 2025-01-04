@@ -1,0 +1,39 @@
+﻿@model List<TransactionDetails>
+
+<h3>All Transactions</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>From Account</th>
+            <th>To Account</th>
+            <th>Transaction Date</th>
+            <th>AmountDebited</th>
+            <th>From Account Balance</th>
+            <th>To Account Balance</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            @foreach (var transaction in Model)
+            {
+                <tr>
+                    <td>@transaction.FromAccount</td>
+                    <td>@transaction.ToAccount</td>
+                    <td>@transaction.TransactionTime</td>
+                    <td>@transaction.AmountDebited</td>
+                    <td>@transaction.FromAccountBalance</td>
+                    <td>@transaction.ToAccountBalance</td>
+                    <td><a href="/Transaction/TransactionDetails?id=@transaction.Id">Details</a></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td colspan="4">No transactions available.</td></tr>
+        }
+
+    </tbody>
+</table>
